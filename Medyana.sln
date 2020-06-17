@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medyana.Web", "Medyana.Web\Medyana.Web.csproj", "{30733CD8-F048-4F50-8AC2-DB76F000F3C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medyana.Web", "Medyana.Web\Medyana.Web.csproj", "{30733CD8-F048-4F50-8AC2-DB76F000F3C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medyana.Api", "Medyana.Api\Medyana.Api.csproj", "{F489923F-DAAB-4495-940B-EF81365E79F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medyana.Api", "Medyana.Api\Medyana.Api.csproj", "{F489923F-DAAB-4495-940B-EF81365E79F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medyana.Model", "Medyana.Model\Medyana.Model.csproj", "{B58B5C33-2999-45A2-BE51-065BDCD8A1BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medyana.Model", "Medyana.Model\Medyana.Model.csproj", "{B58B5C33-2999-45A2-BE51-065BDCD8A1BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medyana.Contract", "Medyana.Contract\Medyana.Contract.csproj", "{40E1BF7A-5900-44EB-BD79-AAD35D879778}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medyana.Contract", "Medyana.Contract\Medyana.Contract.csproj", "{40E1BF7A-5900-44EB-BD79-AAD35D879778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medyana.BM", "Medyana.BM\Medyana.BM.csproj", "{DE98219A-F092-445E-B936-CAA7A218AC82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medyana.BM", "Medyana.BM\Medyana.BM.csproj", "{DE98219A-F092-445E-B936-CAA7A218AC82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medyana.Core", "Medyana.Core\Medyana.Core.csproj", "{B834DBE7-5A3F-4399-B963-CE943206D5DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{DE98219A-F092-445E-B936-CAA7A218AC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE98219A-F092-445E-B936-CAA7A218AC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE98219A-F092-445E-B936-CAA7A218AC82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B834DBE7-5A3F-4399-B963-CE943206D5DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B834DBE7-5A3F-4399-B963-CE943206D5DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B834DBE7-5A3F-4399-B963-CE943206D5DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B834DBE7-5A3F-4399-B963-CE943206D5DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

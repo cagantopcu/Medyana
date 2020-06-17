@@ -1,6 +1,7 @@
 ﻿using Medyana.BM.DbObject;
 using Medyana.Contract;
 using Medyana.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,23 @@ namespace Medyana.BM
 {
     public class EquipmentRepository : IEquipmentRepository<Equipment>
     {
+
+        private readonly ILogger<EquipmentRepository> _logger;
+
+        public EquipmentRepository(ILogger<EquipmentRepository> logger)
+        {
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// Adds New Equipment
+        /// </summary>
+        /// <param name="value">Equipment Item</param>
+        /// <returns>Equipment Item</returns>
         public ApiResult<Equipment> Add(Equipment value)
         {
+
+            _logger.LogInformation("Method Called - EquipmentRepository/Add");
             ApiResult<Equipment> response = new ApiResult<Equipment>();
 
             try
@@ -38,13 +54,22 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
+                _logger.LogError(string.Format("EquipmentRepository/Add - {0}", ex.InnerException.ToString()));
                 response.ErrorMessage = ex.InnerException.ToString();
             }
+
+            _logger.LogInformation(string.Format("EquipmentRepository/Add - IsSucceed:  {0}", response.IsSucceed));
             return response;
         }
 
+        /// <summary>
+        /// Edits Equipment
+        /// </summary>
+        /// <param name="value">Current Equipment Item</param>
+        /// <returns>Updated Equipment Item</returns>
         public ApiResult<Equipment> Edit(Equipment value)
         {
+            _logger.LogInformation("Method Called - EquipmentRepository/Edit");
             ApiResult<Equipment> response = new ApiResult<Equipment>();
 
             try
@@ -70,14 +95,24 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
+                _logger.LogError(string.Format("EquipmentRepository/Edit - {0}", ex.InnerException.ToString()));
                 response.ErrorMessage = ex.InnerException.ToString();
             }
+
+            _logger.LogInformation(string.Format("EquipmentRepository/Edit - IsSucceed: {0}", response.IsSucceed));
             return response;
 
         }
 
+        /// <summary>
+        /// Gets Equipment Item
+        /// </summary>
+        /// <param name="Id">Unique Identifier Of Equipment</param>
+        /// <returns>Matched Equipment Item</returns>
         public ApiResult<Equipment> Get(int Id)
         {
+            _logger.LogInformation("Method Called - EquipmentRepository/Get");
+
             ApiResult<Equipment> response = new ApiResult<Equipment>();
 
             try
@@ -103,13 +138,20 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
+                _logger.LogError(string.Format("EquipmentRepository/Get - {0}", ex.InnerException.ToString()));
                 response.ErrorMessage = ex.InnerException.ToString();
             }
+            _logger.LogInformation(string.Format("EquipmentRepository/Get - IsSucceed:  {0}", response.IsSucceed));
             return response;
         }
 
+        /// <summary>
+        /// Lists All Equipment
+        /// </summary>
+        /// <returns>Defined All Clinis</returns>
         public ApiResult<List<Equipment>> List()
         {
+            _logger.LogInformation("Method Called - EquipmentRepository/List");
             ApiResult<List<Equipment>> response = new ApiResult<List<Equipment>>();
 
             try
@@ -135,9 +177,11 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
+                _logger.LogError(string.Format("EquipmentRepository/List - {0}", ex.InnerException.ToString()));
                 response.ErrorMessage = ex.InnerException.ToString();
             }
 
+            _logger.LogInformation(string.Format("EquipmentRepository/List - IsSucceed: {0}", response.IsSucceed));
             return response;
 
         }

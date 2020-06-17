@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Medyana.BM;
 using Medyana.Contract;
 using Medyana.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace Medyana.Api
 {
@@ -35,12 +34,14 @@ namespace Medyana.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+
 
             app.UseRouting();
 
@@ -50,6 +51,10 @@ namespace Medyana.Api
             {
                 endpoints.MapControllers();
             });
+
+            loggerFactory.AddFile(Configuration.GetSection("SeriLogNameFormat").GetValue<string>("FilePath"));
+            //"Logs/myapp-{Date}.txt"
+
         }
 
         private void InjectRepositories(IServiceCollection services)
