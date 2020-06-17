@@ -11,5 +11,6 @@ namespace Medyana.Contract
         ApiResult<List<TEquipment>> List();
         ApiResult<TEquipment> Add(TEquipment value);
         ApiResult<TEquipment> Edit(TEquipment value);
+        ApiResult<bool> Delete(int Id);
     }
 }

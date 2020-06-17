@@ -15,9 +15,9 @@ namespace Medyana.Api.Controllers
     public class EquipmentController : ControllerBase
     {
         private readonly IEquipmentRepository<Equipment> _equipmentRepository; 
-        private readonly ILogger<ClinicController> _logger;
+        private readonly ILogger<EquipmentController> _logger;
 
-        public EquipmentController(IEquipmentRepository<Equipment> equipmentRepository, ILogger<ClinicController> logger)
+        public EquipmentController(IEquipmentRepository<Equipment> equipmentRepository, ILogger<EquipmentController> logger)
         {
             _equipmentRepository = equipmentRepository;
             _logger = logger;
@@ -62,9 +62,11 @@ namespace Medyana.Api.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ApiResult<bool> Delete(int id)
         {
             _logger.LogInformation("Method Called - api/Equipment/Delete");
+            ApiResult<bool> response = _equipmentRepository.Delete(id);
+            return response;
         }
     }
 }

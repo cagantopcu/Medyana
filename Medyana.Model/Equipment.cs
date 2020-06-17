@@ -25,6 +25,9 @@ namespace Medyana.Model
 
         [Required]
         public decimal UsageRate { get; set; }
+
+        [Required]
+        [Range(1, Double.MaxValue)]
         public int ClinicId { get; set; }
     }
 }

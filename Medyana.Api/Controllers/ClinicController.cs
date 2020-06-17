@@ -63,9 +63,11 @@ namespace Medyana.Api.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ApiResult<bool> Delete(int id)
         {
             _logger.LogInformation("Method Called - api/Clinic/Delete");
+            ApiResult<bool> response = _clinicRepository.Delete(id);
+            return response;
         }
     }
 }

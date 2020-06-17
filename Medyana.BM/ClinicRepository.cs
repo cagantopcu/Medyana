@@ -162,5 +162,39 @@ namespace Medyana.BM
             return response;
 
         }
+
+        /// <summary>
+        /// Deletes Record By Passed Id 
+        /// </summary>
+        /// <param name="Id">Unique Identifier Of Record</param>
+        /// <returns>Is Deleted</returns>
+        public ApiResult<bool> Delete(int Id)
+        {
+            _logger.LogInformation("Method Called - ClinicRepository/Delete");
+
+            ApiResult<bool> response = new ApiResult<bool>();
+
+            try
+            {
+                using (var dbContext = new MedyanaDbContext())
+                {
+                    ClinicDbObject record = new ClinicDbObject() { Id = Id };
+                    dbContext.Attach(record);
+                    dbContext.Remove(record);
+
+                    response.Result = dbContext.SaveChanges() > 0;
+                    response.IsSucceed = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(string.Format("ClinicRepository/Delete - {0}", ex.InnerException.ToString()));
+                response.ErrorMessage = ex.InnerException.ToString();
+            }
+
+            _logger.LogInformation(string.Format("ClinicRepository/Delete - IsSucceed: {0}", response.IsSucceed));
+
+            return response;
+        }
     }
 }

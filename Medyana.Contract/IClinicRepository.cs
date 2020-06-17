@@ -11,5 +11,6 @@ namespace Medyana.Contract
         ApiResult<List<TClinic>> List();
         ApiResult<TClinic> Add(TClinic value);
         ApiResult<TClinic> Edit(TClinic value);
+        ApiResult<bool> Delete(int Id);
     }
 }
