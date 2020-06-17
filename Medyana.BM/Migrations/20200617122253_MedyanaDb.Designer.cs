@@ -4,14 +4,16 @@ using Medyana.BM;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Medyana.BM.Migrations
 {
     [DbContext(typeof(MedyanaDbContext))]
-    partial class MedyanaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200617122253_MedyanaDb")]
+    partial class MedyanaDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

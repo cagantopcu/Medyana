@@ -55,6 +55,7 @@ namespace Medyana.Api
         private void InjectRepositories(IServiceCollection services)
         {
             services.AddSingleton<IClinicRepository<Clinic>, ClinicRepository>();
+            services.AddSingleton<IEquipmentRepository<Equipment>, EquipmentRepository>();
         }
 
         private void ConfigureDb(IServiceCollection services)

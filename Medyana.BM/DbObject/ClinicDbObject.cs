@@ -16,7 +16,7 @@ namespace Medyana.BM.DbObject
         public int Id { get; set; }
 
         [Required]
-        [StringLength(150)]
+        [MaxLength(200), MinLength(1)]
         public string Name { get; set; }
     }
 }

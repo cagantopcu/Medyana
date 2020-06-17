@@ -30,27 +30,27 @@ namespace Medyana.Api.Controllers
         }
 
         // GET: api/Clinic/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetClinic")]
         public ApiResult<Clinic> Get(int Id)
         {
-            ApiResult<Clinic> ClinicResponse = _clinicRepository.Get(Id);            
-            return ClinicResponse;
+            ApiResult<Clinic> response = _clinicRepository.Get(Id);            
+            return response;
         }
 
         // POST: api/Clinic
         [HttpPost]
         public ApiResult<Clinic> Post(Clinic model)
         {
-            ApiResult<Clinic> ClinicResponse = _clinicRepository.Add(model);
-            return ClinicResponse;
+            ApiResult<Clinic> response = _clinicRepository.Add(model);
+            return response;
         }
 
         // PUT: api/Clinic/5
         [HttpPut()]
         public ApiResult<Clinic> Put(Clinic model)
         {
-            ApiResult<Clinic> ClinicResponse = _clinicRepository.Edit(model);
-            return ClinicResponse;
+            ApiResult<Clinic> response = _clinicRepository.Edit(model);
+            return response;
         }
 
         // DELETE: api/ApiWithActions/5

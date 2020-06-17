@@ -9,6 +9,7 @@ namespace Medyana.BM
     public class MedyanaDbContext : DbContext
     {
         public virtual DbSet<ClinicDbObject> ClinicsDbSet { get; set; }
+        public virtual DbSet<EquipmentDbObject> EquipmentsDbSet { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
