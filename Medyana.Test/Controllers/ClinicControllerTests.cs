@@ -32,7 +32,7 @@ namespace Medyana.Test.Controllers
 
 
             _repository = new ClinicRepositoryFake();
-            _controller = new ClinicController(_repository, _logger);
+            //_controller = new ClinicController(_repository, _logger);
         }
 
         [Fact]

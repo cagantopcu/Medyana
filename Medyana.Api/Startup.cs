@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 using Medyana.BM;
 using Medyana.Contract;
 using Medyana.Model;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace Medyana.Api
 {
@@ -29,8 +32,14 @@ namespace Medyana.Api
         {
             services.AddControllers();
             InjectRepositories(services);
-            ConfigureDb(services);
-            //services.AddDbContext<BloggingContext>(options => options.UseSqlite("Data Source=blog.db"));
+
+            services.AddLocalization(o =>
+            {
+                // We will put our translations in a folder called Resources
+                o.ResourcesPath = "Resources";
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,9 +48,8 @@ namespace Medyana.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseRequestLocalization();
             }
-
-
 
             app.UseRouting();
 
@@ -52,8 +60,20 @@ namespace Medyana.Api
                 endpoints.MapControllers();
             });
 
-            loggerFactory.AddFile(Configuration.GetSection("SeriLogNameFormat").GetValue<string>("FilePath"));
-            //"Logs/myapp-{Date}.txt"
+            IList<CultureInfo> supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("tr-TR"),
+                new CultureInfo("en-US")
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
+            IngectLogger(loggerFactory);
+
 
         }
 
@@ -63,9 +83,15 @@ namespace Medyana.Api
             services.AddSingleton<IEquipmentRepository<Equipment>, EquipmentRepository>();
         }
 
-        private void ConfigureDb(IServiceCollection services)
+        private void IngectLogger(ILoggerFactory loggerFactory)
         {
-            //services.AddDbContext<MedyanaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultSqlConnection")));
+
+            loggerFactory.AddFile(Configuration.GetSection("SeriLogNameFormat").GetValue<string>("FilePath"));
+        }
+
+        private void Localize(IApplicationBuilder app)
+        {
+
         }
     }
 }

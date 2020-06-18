@@ -31,7 +31,7 @@ namespace Medyana.Test.Controllers
             _logger = loggerFactory.CreateLogger<EquipmentController>();
 
             _repository = new EquipmentRepositoryFake();
-            _controller = new EquipmentController(_repository, _logger);
+            //_controller = new EquipmentController(_repository, _logger);
         }
 
         [Fact]
