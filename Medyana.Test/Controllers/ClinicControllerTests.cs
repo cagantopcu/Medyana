@@ -36,13 +36,13 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void GetList_WhenCalled_ReturnsSameResult()
+        public async System.Threading.Tasks.Task GetList_WhenCalled_ReturnsSameResultAsync()
         {
             this.ApiResultClinicDummyList.IsSucceed = true;
             this.ClinicListDummyModel = new List<Clinic>() { new Clinic() { Id = 1, Name = "Çağan Clinic 1" } };
 
             BuildDummyData();
-            var response = _controller.Get();
+            var response = await _controller.GetAsync();
             // Assert
 
             Assert.Equal(ClinicListDummyModel, response.Result);
@@ -50,13 +50,13 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void GetList_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task GetList_WhenCalled_ReturnsErrorAsync()
         {
             this.ApiResultClinicDummyList.IsSucceed = false;
             this.ApiResultClinicDummyList.ErrorMessage = "Error Message";
 
             BuildDummyData();
-            var response = _controller.Get();
+            var response = await _controller.GetAsync();
             // Assert
 
             Assert.Equal(this.ApiResultClinicDummyList.ErrorMessage, response.ErrorMessage);
@@ -64,13 +64,13 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Get_WhenCalled_ReturnsSameResult()
+        public async System.Threading.Tasks.Task Get_WhenCalled_ReturnsSameResultAsync()
         {
             this.ApiResultClinicDummyItem.IsSucceed = true;
             this.ClinicDummyModel = new Clinic() { Id = 1, Name = "Çağan Clinic 1" };
 
             BuildDummyData();
-            var response = _controller.Get(ClinicDummyModel.Id);
+            var response = await _controller.GetAsync(ClinicDummyModel.Id);
             // Assert
 
             Assert.Equal(ClinicDummyModel, response.Result);
@@ -78,13 +78,13 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Get_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task Get_WhenCalled_ReturnsErrorAsync()
         {
             this.ApiResultClinicDummyItem.IsSucceed = false;
             this.ApiResultClinicDummyItem.ErrorMessage = "Error Message";
 
             BuildDummyData();
-            var response = _controller.Get(1);
+            var response = await _controller.GetAsync(1);
             // Assert
 
             Assert.Equal(this.ApiResultClinicDummyItem.ErrorMessage, response.ErrorMessage);
@@ -92,7 +92,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Put_WhenCalled_ReturnsUpdatedResult()
+        public async System.Threading.Tasks.Task Put_WhenCalled_ReturnsUpdatedResultAsync()
         {
             var updateModel = new Clinic() { Id = 1, Name = "Updated Clinic Name" };
 
@@ -101,14 +101,14 @@ namespace Medyana.Test.Controllers
 
 
             BuildDummyData();
-            var response = _controller.Put(updateModel);
+            var response = await _controller.PutAsync(updateModel);
 
             Assert.Equal(ClinicDummyModel.Name, response.Result.Name);
             Assert.True(response.IsSucceed);
         }
 
         [Fact]
-        public void Put_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task Put_WhenCalled_ReturnsErrorAsync()
         {
             var updateModel = new Clinic() { Id = 1, Name = "Updated Clinic Name" };
 
@@ -118,34 +118,34 @@ namespace Medyana.Test.Controllers
 
 
             BuildDummyData();
-            var response = _controller.Put(updateModel);
+            var response = await _controller.PutAsync(updateModel);
 
             Assert.Equal(this.ApiResultClinicDummyItem.ErrorMessage, response.ErrorMessage);
             Assert.False(response.IsSucceed);
         }
 
         [Fact]
-        public void Delete_WhenCalled_ReturnsTrue()
+        public async System.Threading.Tasks.Task Delete_WhenCalled_ReturnsTrueAsync()
         {
             ApiResultClinicDeleteDummyModel.Result = true;
             this.ApiResultClinicDeleteDummyModel.IsSucceed = true;
 
             BuildDummyData();
-            var response = _controller.Delete(1);
+            var response = await _controller.DeleteAsync(1);
 
             Assert.Equal(this.ApiResultClinicDeleteDummyModel.Result, response.Result);
             Assert.True(response.IsSucceed);
         }
 
         [Fact]
-        public void Delete_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task Delete_WhenCalled_ReturnsErrorAsync()
         {
             ApiResultClinicDeleteDummyModel.Result = false;
             this.ApiResultClinicDeleteDummyModel.IsSucceed = false;
             this.ApiResultClinicDeleteDummyModel.ErrorMessage = "Record Could Not Fould";
 
             BuildDummyData();
-            var response = _controller.Delete(1);
+            var response = await _controller.DeleteAsync(1);
 
             Assert.Equal(this.ApiResultClinicDeleteDummyModel.Result, response.Result);
             Assert.Equal(this.ApiResultClinicDeleteDummyModel.ErrorMessage, response.ErrorMessage);
@@ -153,7 +153,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Post_WhenCalled_ReturnsSameResult()
+        public async System.Threading.Tasks.Task Post_WhenCalled_ReturnsSameResultAsync()
         {
             var addModel = new Clinic() { Id = 1, Name = "Added Clinic Name" };
 
@@ -162,7 +162,7 @@ namespace Medyana.Test.Controllers
 
 
             BuildDummyData();
-            var response = _controller.Post(addModel);
+            var response = await _controller.Post(addModel);
 
             Assert.Equal(ClinicDummyModel, response.Result);
             Assert.True(response.IsSucceed);

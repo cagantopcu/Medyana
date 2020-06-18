@@ -7,10 +7,10 @@ namespace Medyana.Contract
 {
     public interface IClinicRepository<TClinic> : IRepository
     {
-        ApiResult<TClinic> Get(int Id);
-        ApiResult<List<TClinic>> List();
-        ApiResult<TClinic> Add(TClinic value);
-        ApiResult<TClinic> Edit(TClinic value);
-        ApiResult<bool> Delete(int Id);
+        Task<ApiResult<TClinic>> Get(int Id);
+        Task<ApiResult<List<TClinic>>> List();
+        Task<ApiResult<TClinic>> Add(TClinic value);
+        Task<ApiResult<TClinic>> Edit(TClinic value);
+        Task<ApiResult<bool>> Delete(int Id);
     }
 }

@@ -7,10 +7,10 @@ namespace Medyana.Contract
 {
     public interface IEquipmentRepository<TEquipment> : IRepository
     {
-        ApiResult<TEquipment> Get(int Id);
-        ApiResult<List<TEquipment>> List();
-        ApiResult<TEquipment> Add(TEquipment value);
-        ApiResult<TEquipment> Edit(TEquipment value);
-        ApiResult<bool> Delete(int Id);
+        Task<ApiResult<TEquipment>> Get(int Id);
+        Task<ApiResult<List<TEquipment>>> List();
+        Task<ApiResult<TEquipment>> Add(TEquipment value);
+        Task<ApiResult<TEquipment>> Edit(TEquipment value);
+        Task<ApiResult<bool>> Delete(int Id);
     }
 }

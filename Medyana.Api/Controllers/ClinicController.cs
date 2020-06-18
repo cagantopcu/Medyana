@@ -25,19 +25,19 @@ namespace Medyana.Api.Controllers
 
         // GET: api/Clinic
         [HttpGet]
-        public ApiResult<List<Clinic>> Get()
+        public async Task<ApiResult<List<Clinic>>> GetAsync()
         {
             _logger.LogInformation("Method Called - api/Clinic/Get");
-            ApiResult<List<Clinic>> response = _clinicRepository.List();
+            ApiResult<List<Clinic>> response = await _clinicRepository.List();
             return response;
         }
 
         // GET: api/Clinic/5
         [HttpGet("{id}", Name = "GetClinic")]
-        public ApiResult<Clinic> Get(int Id)
+        public async Task<ApiResult<Clinic>> GetAsync(int Id)
         {
             _logger.LogInformation("Method Called - api/Clinic/Get");
-            ApiResult<Clinic> response = _clinicRepository.Get(Id);
+            ApiResult<Clinic> response = await _clinicRepository.Get(Id);
 
             _logger.LogInformation("api/Clinic/Get", response);
             return response;
@@ -45,28 +45,28 @@ namespace Medyana.Api.Controllers
 
         // POST: api/Clinic
         [HttpPost]
-        public ApiResult<Clinic> Post(Clinic model)
+        public async Task<ApiResult<Clinic>> Post(Clinic model)
         {
             _logger.LogInformation("Method Called - api/Clinic/Post");
-            ApiResult<Clinic> response = _clinicRepository.Add(model);
+            ApiResult<Clinic> response = await _clinicRepository.Add(model);
             return response;
         }
 
         // PUT: api/Clinic/5
         [HttpPut()]
-        public ApiResult<Clinic> Put(Clinic model)
+        public async Task<ApiResult<Clinic>> PutAsync(Clinic model)
         {
             _logger.LogInformation("Method Called - api/Clinic/Put");
-            ApiResult<Clinic> response = _clinicRepository.Edit(model);
+            ApiResult<Clinic> response = await _clinicRepository.Edit(model);
             return response;
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Clinic/5
         [HttpDelete("{id}")]
-        public ApiResult<bool> Delete(int id)
+        public async Task<ApiResult<bool>> DeleteAsync(int id)
         {
             _logger.LogInformation("Method Called - api/Clinic/Delete");
-            ApiResult<bool> response = _clinicRepository.Delete(id);
+            ApiResult<bool> response = await _clinicRepository.Delete(id);
             return response;
         }
     }

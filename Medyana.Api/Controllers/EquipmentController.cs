@@ -25,47 +25,47 @@ namespace Medyana.Api.Controllers
 
         // GET: api/Equipment
         [HttpGet]
-        public ApiResult<List<Equipment>> Get()
+        public async Task<ApiResult<List<Equipment>>> GetAsync()
         {
             _logger.LogInformation("Method Called - api/Equipment/Get");
-            ApiResult<List<Equipment>> response = _equipmentRepository.List();
+            ApiResult<List<Equipment>> response = await _equipmentRepository.List();
 
             return response;
         }
 
         // GET: api/Equipment/5
         [HttpGet("{id}", Name = "GetEquipment")]
-        public ApiResult<Equipment> Get(int Id)
+        public async Task<ApiResult<Equipment>> GetAsync(int Id)
         {
             _logger.LogInformation("Method Called - api/Equipment/Get");
-            ApiResult<Equipment> response = _equipmentRepository.Get(Id);
+            ApiResult<Equipment> response = await _equipmentRepository.Get(Id);
             return response;
         }
 
         // POST: api/Equipment
         [HttpPost]
-        public ApiResult<Equipment> Post(Equipment model)
+        public async Task<ApiResult<Equipment>> PostAsync(Equipment model)
         {
             _logger.LogInformation("Method Called - api/Equipment/Post");
-            ApiResult<Equipment> response = _equipmentRepository.Add(model);
+            ApiResult<Equipment> response = await _equipmentRepository.Add(model);
             return response;
         }
 
         // PUT: api/Equipment/5
         [HttpPut("{id}")]
-        public ApiResult<Equipment> Put(Equipment model)
+        public async Task<ApiResult<Equipment>> PutAsync(Equipment model)
         {
             _logger.LogInformation("Method Called - api/Equipment/Put");
-            ApiResult<Equipment> response = _equipmentRepository.Edit(model);
+            ApiResult<Equipment> response = await _equipmentRepository.Edit(model);
             return response;
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Equipment/5
         [HttpDelete("{id}")]
-        public ApiResult<bool> Delete(int id)
+        public async Task<ApiResult<bool>> DeleteAsync(int id)
         {
             _logger.LogInformation("Method Called - api/Equipment/Delete");
-            ApiResult<bool> response = _equipmentRepository.Delete(id);
+            ApiResult<bool> response = await _equipmentRepository.Delete(id);
             return response;
         }
     }

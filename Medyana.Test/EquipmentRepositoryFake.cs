@@ -3,6 +3,7 @@ using Medyana.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Medyana.Test
 {
@@ -22,32 +23,32 @@ namespace Medyana.Test
         public ApiResult<bool> ApiResultDeleteDummyModel { get => _deleteDummyModel; set => _deleteDummyModel = value; }
         public bool DeleteDummyModel { get => _deleteDummuModel; set => _deleteDummuModel = value; }
 
-        public ApiResult<Equipment> Add(Equipment value)
+        public async Task<ApiResult<Equipment>> Add(Equipment value)
         {
             ApiResultDummyItem.Result = DummyModel;
             return ApiResultDummyItem;
         }
 
-        public ApiResult<bool> Delete(int Id)
+        public async Task<ApiResult<bool>> Delete(int Id)
         {
             ApiResultDeleteDummyModel.Result = DeleteDummyModel;
             return ApiResultDeleteDummyModel;
         }
 
-        public ApiResult<Equipment> Edit(Equipment value)
+        public async Task<ApiResult<Equipment>> Edit(Equipment value)
         {
             ApiResultDummyItem.Result = DummyModel;
             ApiResultDummyItem.Result.Name = value.Name;
             return ApiResultDummyItem;
         }
 
-        public ApiResult<Equipment> Get(int Id)
+        public async Task<ApiResult<Equipment>> Get(int Id)
         {
             ApiResultDummyItem.Result = DummyModel;
             return ApiResultDummyItem;
         }
 
-        public ApiResult<List<Equipment>> List()
+        public async Task<ApiResult<List<Equipment>>> List()
         {
             ApiResultDummyList.Result = ListDummyModel;
             return ApiResultDummyList;

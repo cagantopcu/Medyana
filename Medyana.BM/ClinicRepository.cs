@@ -1,6 +1,7 @@
 ﻿using Medyana.BM.DbObject;
 using Medyana.Contract;
 using Medyana.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="value">Clinic Item</param>
         /// <returns>Clinic Item</returns>
-        public ApiResult<Clinic> Add(Clinic value)
+        public async Task<ApiResult<Clinic>> Add(Clinic value)
         {
             _logger.LogInformation("Method Called - ClinicRepository/Add");
 
@@ -41,9 +42,9 @@ namespace Medyana.BM
 
 
                     dbContext.ClinicsDbSet.Add(clinicDbObject);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
+                    value.Id = clinicDbObject.Id;
                 }
-
                 response.Result = value;
                 response.IsSucceed = true;
             }
@@ -62,7 +63,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="value">Current Clinic Item</param>
         /// <returns>Updated Clinic Item</returns>
-        public ApiResult<Clinic> Edit(Clinic value)
+        public async Task<ApiResult<Clinic>> Edit(Clinic value)
         {
             _logger.LogInformation("Method Called - ClinicRepository/Edit");
             ApiResult<Clinic> response = new ApiResult<Clinic>();
@@ -71,11 +72,11 @@ namespace Medyana.BM
             {
                 using (var dbContext = new MedyanaDbContext())
                 {
-                    var clinicRecord = dbContext.ClinicsDbSet.Where(m => m.Id == value.Id).FirstOrDefault();
+                    var clinicRecord = await dbContext.ClinicsDbSet.Where(m => m.Id == value.Id).FirstOrDefaultAsync();
                     // TO DO Nullcheck
                     clinicRecord.Name = value.Name;
                     dbContext.Attach(clinicRecord);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                 }
 
                 response.Result = value;
@@ -97,7 +98,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="Id">Unique Identifier Of Clinic</param>
         /// <returns>Matched Clinic Item</returns>
-        public ApiResult<Clinic> Get(int Id)
+        public async Task<ApiResult<Clinic>> Get(int Id)
         {
             _logger.LogInformation("Method Called - ClinicRepository/Get");
 
@@ -107,7 +108,8 @@ namespace Medyana.BM
             {
                 using (var dbContext = new MedyanaDbContext())
                 {
-                    var result = dbContext.ClinicsDbSet.Where(m => m.Id == Id).FirstOrDefault();
+
+                    var result = await dbContext.ClinicsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
 
                     response.Result = new Clinic()
                     {
@@ -131,7 +133,7 @@ namespace Medyana.BM
         /// Lists All Clinics
         /// </summary>
         /// <returns>Defined All Clinis</returns>
-        public ApiResult<List<Clinic>> List()
+        public async Task<ApiResult<List<Clinic>>> List()
         {
             _logger.LogInformation("Method Called - ClinicRepository/List");
             ApiResult<List<Clinic>> response = new ApiResult<List<Clinic>>();
@@ -140,7 +142,7 @@ namespace Medyana.BM
             {
                 using (var dbContext = new MedyanaDbContext())
                 {
-                    var result = dbContext.ClinicsDbSet.ToList();
+                    var result = await dbContext.ClinicsDbSet.ToListAsync();
 
                     //// TODO mapper
                     response.Result = result.Select(m => new Clinic()
@@ -168,7 +170,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="Id">Unique Identifier Of Record</param>
         /// <returns>Is Deleted</returns>
-        public ApiResult<bool> Delete(int Id)
+        public async Task<ApiResult<bool>> Delete(int Id)
         {
             _logger.LogInformation("Method Called - ClinicRepository/Delete");
 
@@ -182,7 +184,7 @@ namespace Medyana.BM
                     dbContext.Attach(record);
                     dbContext.Remove(record);
 
-                    response.Result = dbContext.SaveChanges() > 0;
+                    response.Result = await dbContext.SaveChangesAsync() > 0;
                     response.IsSucceed = true;
                 }
             }
@@ -196,5 +198,6 @@ namespace Medyana.BM
 
             return response;
         }
+
     }
 }

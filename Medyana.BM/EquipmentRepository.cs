@@ -1,6 +1,7 @@
 ﻿using Medyana.BM.DbObject;
 using Medyana.Contract;
 using Medyana.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="value">Equipment Item</param>
         /// <returns>Equipment Item</returns>
-        public ApiResult<Equipment> Add(Equipment value)
+        public async Task<ApiResult<Equipment>> Add(Equipment value)
         {
 
             _logger.LogInformation("Method Called - EquipmentRepository/Add");
@@ -46,7 +47,9 @@ namespace Medyana.BM
 
 
                     dbContext.EquipmentsDbSet.Add(equipmentDbObject);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
+
+                    value.Id = equipmentDbObject.Id;
                 }
 
                 response.Result = value;
@@ -67,7 +70,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="value">Current Equipment Item</param>
         /// <returns>Updated Equipment Item</returns>
-        public ApiResult<Equipment> Edit(Equipment value)
+        public async Task<ApiResult<Equipment>> Edit(Equipment value)
         {
             _logger.LogInformation("Method Called - EquipmentRepository/Edit");
             ApiResult<Equipment> response = new ApiResult<Equipment>();
@@ -87,7 +90,7 @@ namespace Medyana.BM
                     equipmentRecord.UsageRate = value.UsageRate;
 
                     dbContext.Attach(equipmentRecord);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                 }
 
                 response.Result = value;
@@ -109,7 +112,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="Id">Unique Identifier Of Equipment</param>
         /// <returns>Matched Equipment Item</returns>
-        public ApiResult<Equipment> Get(int Id)
+        public async Task<ApiResult<Equipment>> Get(int Id)
         {
             _logger.LogInformation("Method Called - EquipmentRepository/Get");
 
@@ -119,7 +122,7 @@ namespace Medyana.BM
             {
                 using (var dbContext = new MedyanaDbContext())
                 {
-                    var result = dbContext.EquipmentsDbSet.Where(m => m.Id == Id).FirstOrDefault();
+                    var result = await dbContext.EquipmentsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
 
                     //// TODO mapper
                     response.Result = new Equipment()
@@ -149,7 +152,7 @@ namespace Medyana.BM
         /// Lists All Equipment
         /// </summary>
         /// <returns>Defined All Clinis</returns>
-        public ApiResult<List<Equipment>> List()
+        public async Task<ApiResult<List<Equipment>>> List()
         {
             _logger.LogInformation("Method Called - EquipmentRepository/List");
             ApiResult<List<Equipment>> response = new ApiResult<List<Equipment>>();
@@ -158,7 +161,7 @@ namespace Medyana.BM
             {
                 using (var dbContext = new MedyanaDbContext())
                 {
-                    var result = dbContext.EquipmentsDbSet.ToList();
+                    var result = await dbContext.EquipmentsDbSet.ToListAsync();
 
                     //// TODO mapper
                     response.Result = result.Select(m => new Equipment()
@@ -192,7 +195,7 @@ namespace Medyana.BM
         /// </summary>
         /// <param name="Id">Unique Identifier Of Record</param>
         /// <returns>Is Deleted</returns>
-        public ApiResult<bool> Delete(int Id)
+        public async Task<ApiResult<bool>> Delete(int Id)
         {
             _logger.LogInformation("Method Called - EquipmentRepository/Delete");
 
@@ -206,7 +209,7 @@ namespace Medyana.BM
                     dbContext.Attach(record);
                     dbContext.Remove(record);
 
-                    response.Result = dbContext.SaveChanges() > 0;
+                    response.Result = await dbContext.SaveChangesAsync() > 0;
                     response.IsSucceed = true;
                 }
             }

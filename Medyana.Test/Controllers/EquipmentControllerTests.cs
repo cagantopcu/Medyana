@@ -35,7 +35,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void GetList_WhenCalled_ReturnsSameResult()
+        public async System.Threading.Tasks.Task GetList_WhenCalled_ReturnsSameResultAsync()
         {
             this.ApiResultEquipmentDummyList.IsSucceed = true;
             this.EquipmentListDummyModel = new List<Equipment>() {
@@ -51,7 +51,7 @@ namespace Medyana.Test.Controllers
             };
 
             BuildDummyData();
-            var response = _controller.Get();
+            var response = await _controller.GetAsync();
             // Assert
 
             Assert.Equal(EquipmentListDummyModel, response.Result);
@@ -59,13 +59,13 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void GetList_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task GetList_WhenCalled_ReturnsErrorAsync()
         {
             this.ApiResultEquipmentDummyList.IsSucceed = false;
             this.ApiResultEquipmentDummyList.ErrorMessage = "Error Message";
 
             BuildDummyData();
-            var response = _controller.Get();
+            var response = await _controller.GetAsync();
             // Assert
 
             Assert.Equal(this.ApiResultEquipmentDummyList.ErrorMessage, response.ErrorMessage);
@@ -73,7 +73,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Get_WhenCalled_ReturnsSameResult()
+        public async System.Threading.Tasks.Task Get_WhenCalled_ReturnsSameResultAsync()
         {
             this.ApiResultEquipmentDummyItem.IsSucceed = true;
             this.EquipmentDummyModel = new Equipment()
@@ -88,7 +88,7 @@ namespace Medyana.Test.Controllers
             };
 
             BuildDummyData();
-            var response = _controller.Get(EquipmentDummyModel.Id);
+            var response = await _controller.GetAsync(EquipmentDummyModel.Id);
             // Assert
 
             Assert.Equal(EquipmentDummyModel, response.Result);
@@ -96,13 +96,13 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Get_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task Get_WhenCalled_ReturnsErrorAsync()
         {
             this.ApiResultEquipmentDummyItem.IsSucceed = false;
             this.ApiResultEquipmentDummyItem.ErrorMessage = "Error Message";
 
             BuildDummyData();
-            var response = _controller.Get(1);
+            var response = await _controller.GetAsync(1);
             // Assert
 
             Assert.Equal(this.ApiResultEquipmentDummyItem.ErrorMessage, response.ErrorMessage);
@@ -110,7 +110,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Put_WhenCalled_ReturnsUpdatedResult()
+        public async System.Threading.Tasks.Task Put_WhenCalled_ReturnsUpdatedResultAsync()
         {
             var updateModel = new Equipment()
             {
@@ -137,14 +137,14 @@ namespace Medyana.Test.Controllers
 
 
             BuildDummyData();
-            var response = _controller.Put(updateModel);
+            var response = await _controller.PutAsync(updateModel);
 
             Assert.Equal(EquipmentDummyModel.Name, response.Result.Name);
             Assert.True(response.IsSucceed);
         }
 
         [Fact]
-        public void Put_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task Put_WhenCalled_ReturnsErrorAsync()
         {
             var updateModel = new Equipment() { Id = 1, Name = "Updated Equipment Name" };
 
@@ -152,34 +152,34 @@ namespace Medyana.Test.Controllers
             this.ApiResultEquipmentDummyItem.ErrorMessage = "Record Could Not Found";
 
             BuildDummyData();
-            var response = _controller.Put(updateModel);
+            var response = await _controller.PutAsync(updateModel);
 
             Assert.Equal(this.ApiResultEquipmentDummyItem.ErrorMessage, response.ErrorMessage);
             Assert.False(response.IsSucceed);
         }
 
         [Fact]
-        public void Delete_WhenCalled_ReturnsTrue()
+        public async System.Threading.Tasks.Task Delete_WhenCalled_ReturnsTrueAsync()
         {
             ApiResultEquipmentDeleteDummyModel.Result = true;
             this.ApiResultEquipmentDeleteDummyModel.IsSucceed = true;
 
             BuildDummyData();
-            var response = _controller.Delete(1);
+            var response = await _controller.DeleteAsync(1);
 
             Assert.Equal(this.ApiResultEquipmentDeleteDummyModel.Result, response.Result);
             Assert.True(response.IsSucceed);
         }
 
         [Fact]
-        public void Delete_WhenCalled_ReturnsError()
+        public async System.Threading.Tasks.Task Delete_WhenCalled_ReturnsErrorAsync()
         {
             ApiResultEquipmentDeleteDummyModel.Result = false;
             this.ApiResultEquipmentDeleteDummyModel.IsSucceed = false;
             this.ApiResultEquipmentDeleteDummyModel.ErrorMessage = "Record Could Not Fould";
 
             BuildDummyData();
-            var response = _controller.Delete(1);
+            var response = await _controller.DeleteAsync(1);
 
             Assert.Equal(this.ApiResultEquipmentDeleteDummyModel.Result, response.Result);
             Assert.Equal(this.ApiResultEquipmentDeleteDummyModel.ErrorMessage, response.ErrorMessage);
@@ -187,7 +187,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public void Post_WhenCalled_ReturnsSameResult()
+        public async System.Threading.Tasks.Task Post_WhenCalled_ReturnsSameResultAsync()
         {
             var addModel = new Equipment()
             {
@@ -205,7 +205,7 @@ namespace Medyana.Test.Controllers
 
 
             BuildDummyData();
-            var response = _controller.Post(addModel);
+            var response = await _controller.PostAsync(addModel);
 
             Assert.Equal(EquipmentDummyModel, response.Result);
             Assert.True(response.IsSucceed);
