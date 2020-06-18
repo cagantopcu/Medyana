@@ -18,11 +18,13 @@ namespace Medyana.BM
 
         private readonly ILogger<EquipmentRepository> _logger;
         private readonly IStringLocalizer<SharedResources> _localizer;
+        private readonly MedyanaDbContext _dbContext;
 
-        public EquipmentRepository(ILogger<EquipmentRepository> logger, IStringLocalizer<SharedResources> localizer)
+        public EquipmentRepository(ILogger<EquipmentRepository> logger, IStringLocalizer<SharedResources> localizer, MedyanaDbContext dbContext)
         {
             _logger = logger;
             _localizer = localizer;
+            _dbContext = dbContext;
             _logger.LogInformation(_localizer["LogClassConstructor", "EquipmentRepository"]);
         }
 
@@ -38,31 +40,28 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+                if (_dbContext.ClinicsDbSet.Any(m => m.Id == value.ClinicId) == false)
                 {
-                    if (dbContext.ClinicsDbSet.Any(m => m.Id == value.ClinicId) == false)
-                    {
-                        response.ErrorMessage = _localizer["RecordNotFound", "Clinic"].Value;
-                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Delete", response.ErrorMessage]);
-                        return response;
-                    }
-
-                    EquipmentDbObject equipmentDbObject = new EquipmentDbObject()
-                    {
-                        Name = value.Name,
-                        ClinicId = value.ClinicId,
-                        Quantity = value.Quantity,
-                        SupplyDate = value.SupplyDate,
-                        UnitPrice = value.UnitPrice,
-                        UsageRate = value.UsageRate
-                    };
-
-
-                    dbContext.EquipmentsDbSet.Add(equipmentDbObject);
-                    await dbContext.SaveChangesAsync();
-
-                    value.Id = equipmentDbObject.Id;
+                    response.ErrorMessage = _localizer["RecordNotFound", "Clinic"].Value;
+                    _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Delete", response.ErrorMessage]);
+                    return response;
                 }
+
+                EquipmentDbObject equipmentDbObject = new EquipmentDbObject()
+                {
+                    Name = value.Name,
+                    ClinicId = value.ClinicId,
+                    Quantity = value.Quantity,
+                    SupplyDate = value.SupplyDate,
+                    UnitPrice = value.UnitPrice,
+                    UsageRate = value.UsageRate
+                };
+
+
+                _dbContext.EquipmentsDbSet.Add(equipmentDbObject);
+                await _dbContext.SaveChangesAsync();
+
+                value.Id = equipmentDbObject.Id;
 
                 response.Result = value;
                 response.IsSucceed = true;
@@ -90,27 +89,24 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+                var equipmentRecord = _dbContext.EquipmentsDbSet.Where(m => m.Id == value.Id).FirstOrDefault();
+
+                if (equipmentRecord == null)
                 {
-                    var equipmentRecord = dbContext.EquipmentsDbSet.Where(m => m.Id == value.Id).FirstOrDefault();
-
-                    if (equipmentRecord == null)
-                    {
-                        response.ErrorMessage = _localizer["RecordNotFound", "Equipment"].Value;
-                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Edit", response.ErrorMessage]);
-                        return response;
-                    }
-
-                    equipmentRecord.Name = value.Name;
-                    equipmentRecord.ClinicId = value.ClinicId;
-                    equipmentRecord.Quantity = value.Quantity;
-                    equipmentRecord.SupplyDate = value.SupplyDate;
-                    equipmentRecord.UnitPrice = value.UnitPrice;
-                    equipmentRecord.UsageRate = value.UsageRate;
-
-                    dbContext.Attach(equipmentRecord);
-                    await dbContext.SaveChangesAsync();
+                    response.ErrorMessage = _localizer["RecordNotFound", "Equipment"].Value;
+                    _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Edit", response.ErrorMessage]);
+                    return response;
                 }
+
+                equipmentRecord.Name = value.Name;
+                equipmentRecord.ClinicId = value.ClinicId;
+                equipmentRecord.Quantity = value.Quantity;
+                equipmentRecord.SupplyDate = value.SupplyDate;
+                equipmentRecord.UnitPrice = value.UnitPrice;
+                equipmentRecord.UsageRate = value.UsageRate;
+
+                _dbContext.Attach(equipmentRecord);
+                await _dbContext.SaveChangesAsync();
 
                 response.Result = value;
                 response.IsSucceed = true;
@@ -140,29 +136,27 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+
+                var result = await _dbContext.EquipmentsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
+
+                if (result == null)
                 {
-                    var result = await dbContext.EquipmentsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
-
-                    if (result == null)
-                    {
-                        response.ErrorMessage = _localizer["RecordNotFound", "Equipment"].Value;
-                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Get", response.ErrorMessage]);
-                        return response;
-                    }
-
-                    response.Result = new Equipment()
-                    {
-                        Id = result.Id,
-                        Name = result.Name,
-                        ClinicId = result.ClinicId,
-                        Quantity = result.Quantity,
-                        SupplyDate = result.SupplyDate,
-                        UnitPrice = result.UnitPrice,
-                        UsageRate = result.UsageRate
-
-                    };
+                    response.ErrorMessage = _localizer["RecordNotFound", "Equipment"].Value;
+                    _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Get", response.ErrorMessage]);
+                    return response;
                 }
+
+                response.Result = new Equipment()
+                {
+                    Id = result.Id,
+                    Name = result.Name,
+                    ClinicId = result.ClinicId,
+                    Quantity = result.Quantity,
+                    SupplyDate = result.SupplyDate,
+                    UnitPrice = result.UnitPrice,
+                    UsageRate = result.UsageRate
+
+                };
                 response.IsSucceed = true;
             }
             catch (Exception ex)
@@ -187,21 +181,18 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
-                {
-                    var result = await dbContext.EquipmentsDbSet.ToListAsync();
+                var result = await _dbContext.EquipmentsDbSet.ToListAsync();
 
-                    response.Result = result.Select(m => new Equipment()
-                    {
-                        Id = m.Id,
-                        Name = m.Name,
-                        ClinicId = m.ClinicId,
-                        Quantity = m.Quantity,
-                        SupplyDate = m.SupplyDate,
-                        UnitPrice = m.UnitPrice,
-                        UsageRate = m.UsageRate
-                    }).ToList();
-                }
+                response.Result = result.Select(m => new Equipment()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    ClinicId = m.ClinicId,
+                    Quantity = m.Quantity,
+                    SupplyDate = m.SupplyDate,
+                    UnitPrice = m.UnitPrice,
+                    UsageRate = m.UsageRate
+                }).ToList();
                 response.IsSucceed = true;
 
             }
@@ -231,23 +222,20 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+                if (_dbContext.EquipmentsDbSet.Any(m => m.Id == Id) == false)
                 {
-                    if (dbContext.EquipmentsDbSet.Any(m => m.Id == Id) == false)
-                    {
-                        response.ErrorMessage = _localizer["RecordNotFound", "Equipment" ].Value;                        
-                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Delete", response.ErrorMessage]);
-                        return response;
-                    }
-
-                    EquipmentDbObject record = new EquipmentDbObject() { Id = Id };
-
-                    dbContext.Attach(record);
-                    dbContext.Remove(record);
-
-                    response.Result = await dbContext.SaveChangesAsync() > 0;
-                    response.IsSucceed = true;
+                    response.ErrorMessage = _localizer["RecordNotFound", "Equipment"].Value;
+                    _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Delete", response.ErrorMessage]);
+                    return response;
                 }
+
+                EquipmentDbObject record = new EquipmentDbObject() { Id = Id };
+
+                _dbContext.Attach(record);
+                _dbContext.Remove(record);
+
+                response.Result = await _dbContext.SaveChangesAsync() > 0;
+                response.IsSucceed = true;
             }
             catch (Exception ex)
             {

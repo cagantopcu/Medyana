@@ -15,6 +15,7 @@ using Medyana.Model;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medyana.Api
 {
@@ -37,6 +38,11 @@ namespace Medyana.Api
             {
                 // We will put our translations in a folder called Resources
                 o.ResourcesPath = "Resources";
+            });
+
+            services.AddDbContext<MedyanaDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultSqlConnection"));
             });
 
 
@@ -74,13 +80,14 @@ namespace Medyana.Api
 
             IngectLogger(loggerFactory);
 
+            UpdateDatabase(app);
 
         }
 
         private void InjectRepositories(IServiceCollection services)
         {
-            services.AddSingleton<IClinicRepository<Clinic>, ClinicRepository>();
-            services.AddSingleton<IEquipmentRepository<Equipment>, EquipmentRepository>();
+            services.AddScoped<IClinicRepository<Clinic>, ClinicRepository>();
+            services.AddScoped<IEquipmentRepository<Equipment>, EquipmentRepository>();
         }
 
         private void IngectLogger(ILoggerFactory loggerFactory)
@@ -92,6 +99,19 @@ namespace Medyana.Api
         private void Localize(IApplicationBuilder app)
         {
 
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<MedyanaDbContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }

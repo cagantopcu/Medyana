@@ -18,5 +18,7 @@ namespace Medyana.BM.DbObject
         [Required]
         [MaxLength(200), MinLength(1)]
         public string Name { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

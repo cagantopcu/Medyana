@@ -17,12 +17,14 @@ namespace Medyana.BM
     {
         private readonly ILogger<ClinicRepository> _logger;
         private readonly IStringLocalizer<SharedResources> _localizer;
+        private readonly MedyanaDbContext _dbContext;
 
 
-        public ClinicRepository(ILogger<ClinicRepository> logger, IStringLocalizer<SharedResources> localizer)
+        public ClinicRepository(ILogger<ClinicRepository> logger, IStringLocalizer<SharedResources> localizer, MedyanaDbContext dbContext)
         {
             _logger = logger;
             _localizer = localizer;
+            _dbContext = dbContext;
             _logger.LogInformation(_localizer["LogClassConstructor", "ClinicRepository"]);
         }
 
@@ -39,19 +41,17 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+                ClinicDbObject clinicDbObject = new ClinicDbObject()
                 {
-                    ClinicDbObject clinicDbObject = new ClinicDbObject()
-                    {
-                        Id = value.Id,
-                        Name = value.Name
-                    };
+                    Id = value.Id,
+                    Name = value.Name
+                };
 
 
-                    dbContext.ClinicsDbSet.Add(clinicDbObject);
-                    await dbContext.SaveChangesAsync();
-                    value.Id = clinicDbObject.Id;
-                }
+                _dbContext.ClinicsDbSet.Add(clinicDbObject);
+                await _dbContext.SaveChangesAsync();
+
+                value.Id = clinicDbObject.Id;
                 response.Result = value;
                 response.IsSucceed = true;
             }
@@ -79,21 +79,18 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+                var clinicRecord = await _dbContext.ClinicsDbSet.Where(m => m.Id == value.Id).FirstOrDefaultAsync();
+
+                if (clinicRecord == null)
                 {
-                    var clinicRecord = await dbContext.ClinicsDbSet.Where(m => m.Id == value.Id).FirstOrDefaultAsync();
-
-                    if (clinicRecord == null)
-                    {
-                        response.ErrorMessage = _localizer["RecordNotFound" , "Clinic"].Value;
-                        _logger.LogInformation(_localizer["LogErrorMessage", "ClinicRepository/Edit", response.ErrorMessage]);
-                        return response;
-                    }
-
-                    clinicRecord.Name = value.Name;
-                    dbContext.Attach(clinicRecord);
-                    await dbContext.SaveChangesAsync();
+                    response.ErrorMessage = _localizer["RecordNotFound", "Clinic"].Value;
+                    _logger.LogInformation(_localizer["LogErrorMessage", "ClinicRepository/Edit", response.ErrorMessage]);
+                    return response;
                 }
+
+                clinicRecord.Name = value.Name;
+                _dbContext.Attach(clinicRecord);
+                await _dbContext.SaveChangesAsync();
 
                 response.Result = value;
                 response.IsSucceed = true;
@@ -123,24 +120,20 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+                var result = await _dbContext.ClinicsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
+
+                if (result == null)
                 {
-
-                    var result = await dbContext.ClinicsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
-
-                    if (result == null)
-                    {
-                        response.ErrorMessage = _localizer["RecordNotFound", "Clinic"].Value;
-                        _logger.LogInformation(_localizer["LogErrorMessage", "ClinicRepository/Get", response.ErrorMessage]);
-                        return response;
-                    }
-
-                    response.Result = new Clinic()
-                    {
-                        Id = result.Id,
-                        Name = result.Name
-                    };
+                    response.ErrorMessage = _localizer["RecordNotFound", "Clinic"].Value;
+                    _logger.LogInformation(_localizer["LogErrorMessage", "ClinicRepository/Get", response.ErrorMessage]);
+                    return response;
                 }
+
+                response.Result = new Clinic()
+                {
+                    Id = result.Id,
+                    Name = result.Name
+                };
                 response.IsSucceed = true;
             }
             catch (Exception ex)
@@ -164,17 +157,14 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
-                {
-                    var result = await dbContext.ClinicsDbSet.ToListAsync();
 
-                    //// TODO mapper
-                    response.Result = result.Select(m => new Clinic()
-                    {
-                        Id = m.Id,
-                        Name = m.Name
-                    }).ToList();
-                }
+                var result = await _dbContext.ClinicsDbSet.ToListAsync();
+
+                response.Result = result.Select(m => new Clinic()
+                {
+                    Id = m.Id,
+                    Name = m.Name
+                }).ToList();
                 response.IsSucceed = true;
 
             }
@@ -203,22 +193,19 @@ namespace Medyana.BM
 
             try
             {
-                using (var dbContext = new MedyanaDbContext())
+                if (_dbContext.ClinicsDbSet.Any(m => m.Id == Id) == false)
                 {
-                    if (dbContext.ClinicsDbSet.Any(m => m.Id == Id) == false)
-                    {
-                        response.ErrorMessage = _localizer["RecordNotFound" , "Clinic"].Value;
-                        _logger.LogInformation(_localizer["LogErrorMessage", "ClinicRepository/Delete", response.ErrorMessage]);
-                        return response;
-                    }
-
-                    ClinicDbObject record = new ClinicDbObject() { Id = Id };
-                    dbContext.Attach(record);
-                    dbContext.Remove(record);
-
-                    response.Result = await dbContext.SaveChangesAsync() > 0;
-                    response.IsSucceed = true;
+                    response.ErrorMessage = _localizer["RecordNotFound", "Clinic"].Value;
+                    _logger.LogInformation(_localizer["LogErrorMessage", "ClinicRepository/Delete", response.ErrorMessage]);
+                    return response;
                 }
+
+                ClinicDbObject record = new ClinicDbObject() { Id = Id };
+                _dbContext.Attach(record);
+                _dbContext.Remove(record);
+
+                response.Result = await _dbContext.SaveChangesAsync() > 0;
+                response.IsSucceed = true;
             }
             catch (Exception ex)
             {

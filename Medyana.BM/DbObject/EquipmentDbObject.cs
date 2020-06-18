@@ -34,5 +34,7 @@ namespace Medyana.BM.DbObject
         public virtual ClinicDbObject Clinic { get; set; }
         public int ClinicId { get; set; }
 
+        public bool IsDeleted { get; set; }
+
     }
 }
