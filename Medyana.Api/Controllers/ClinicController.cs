@@ -9,6 +9,8 @@ using Medyana.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
+using Medyana.ResourceManager;
+using Medyana.Core.Extensions;
 
 namespace Medyana.Api.Controllers
 {
@@ -34,7 +36,7 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Clinic/Get"]);
             ApiResult<List<Clinic>> response = await _clinicRepository.List();
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Get", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Get", response.Deserialize()]);
             return response;
         }
 
@@ -44,7 +46,7 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Clinic/Get"]);
             ApiResult<Clinic> response = await _clinicRepository.Get(Id);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Get", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Get", response.Deserialize()]);
             return response;
         }
 
@@ -54,7 +56,7 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Clinic/Post"]);
             ApiResult<Clinic> response = await _clinicRepository.Add(model);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Post", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Post", response.Deserialize()]);
             return response;
         }
 
@@ -64,7 +66,7 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Clinic/Put"]);
             ApiResult<Clinic> response = await _clinicRepository.Edit(model);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Put", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Put", response.Deserialize()]);
             return response;
         }
 
@@ -74,7 +76,7 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Clinic/Delete"]);
             ApiResult<bool> response = await _clinicRepository.Delete(id);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Delete", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Clinic/Delete", response.Deserialize()]);
             return response;
         }
     }

@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
+using Medyana.ResourceManager;
+using Medyana.Core.Extensions;
 
 namespace Medyana.BM
 {
@@ -14,10 +17,13 @@ namespace Medyana.BM
     {
 
         private readonly ILogger<EquipmentRepository> _logger;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public EquipmentRepository(ILogger<EquipmentRepository> logger)
+        public EquipmentRepository(ILogger<EquipmentRepository> logger, IStringLocalizer<SharedResources> localizer)
         {
             _logger = logger;
+            _localizer = localizer;
+            _logger.LogInformation(_localizer["LogClassConstructor", "EquipmentRepository"]);
         }
 
         /// <summary>
@@ -27,14 +33,20 @@ namespace Medyana.BM
         /// <returns>Equipment Item</returns>
         public async Task<ApiResult<Equipment>> Add(Equipment value)
         {
-
-            _logger.LogInformation("Method Called - EquipmentRepository/Add");
+            _logger.LogInformation(_localizer["LogMethodCalled", "EquipmentRepository/Add"]);
             ApiResult<Equipment> response = new ApiResult<Equipment>();
 
             try
             {
                 using (var dbContext = new MedyanaDbContext())
                 {
+                    if (dbContext.ClinicsDbSet.Any(m => m.Id == value.ClinicId) == false)
+                    {
+                        response.ErrorMessage = _localizer["RecordNotFound", "Clinic"].Value;
+                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Delete", response.ErrorMessage]);
+                        return response;
+                    }
+
                     EquipmentDbObject equipmentDbObject = new EquipmentDbObject()
                     {
                         Name = value.Name,
@@ -57,11 +69,12 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format("EquipmentRepository/Add - {0}", ex.InnerException.ToString()));
+                _logger.LogInformation(_localizer["LogMethodError", "EquipmentRepository/Add", ex.InnerException.ToString()]);
                 response.ErrorMessage = ex.InnerException.ToString();
             }
 
-            _logger.LogInformation(string.Format("EquipmentRepository/Add - IsSucceed:  {0}", response.IsSucceed));
+            _logger.LogInformation(_localizer["LogMethodSucceed", "EquipmentRepository/Add", response.IsSucceed.Deserialize()]);
+            _logger.LogInformation(_localizer["LogMethodResult", "EquipmentRepository/Add", response.Deserialize()]);
             return response;
         }
 
@@ -72,7 +85,7 @@ namespace Medyana.BM
         /// <returns>Updated Equipment Item</returns>
         public async Task<ApiResult<Equipment>> Edit(Equipment value)
         {
-            _logger.LogInformation("Method Called - EquipmentRepository/Edit");
+            _logger.LogInformation(_localizer["LogMethodCalled", "EquipmentRepository/Edit"]);
             ApiResult<Equipment> response = new ApiResult<Equipment>();
 
             try
@@ -81,7 +94,13 @@ namespace Medyana.BM
                 {
                     var equipmentRecord = dbContext.EquipmentsDbSet.Where(m => m.Id == value.Id).FirstOrDefault();
 
-                    // TO DO Nullcheck
+                    if (equipmentRecord == null)
+                    {
+                        response.ErrorMessage = _localizer["RecordNotFound", "Equipment"].Value;
+                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Edit", response.ErrorMessage]);
+                        return response;
+                    }
+
                     equipmentRecord.Name = value.Name;
                     equipmentRecord.ClinicId = value.ClinicId;
                     equipmentRecord.Quantity = value.Quantity;
@@ -98,13 +117,14 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format("EquipmentRepository/Edit - {0}", ex.InnerException.ToString()));
+                _logger.LogInformation(_localizer["LogMethodError", "EquipmentRepository/Edit", ex.InnerException.ToString()]);
                 response.ErrorMessage = ex.InnerException.ToString();
             }
 
-            _logger.LogInformation(string.Format("EquipmentRepository/Edit - IsSucceed: {0}", response.IsSucceed));
-            return response;
+            _logger.LogInformation(_localizer["LogMethodSucceed", "EquipmentRepository/Edit", response.IsSucceed.Deserialize()]);
+            _logger.LogInformation(_localizer["LogMethodResult", "EquipmentRepository/Edit", response.Deserialize()]);
 
+            return response;
         }
 
         /// <summary>
@@ -114,7 +134,7 @@ namespace Medyana.BM
         /// <returns>Matched Equipment Item</returns>
         public async Task<ApiResult<Equipment>> Get(int Id)
         {
-            _logger.LogInformation("Method Called - EquipmentRepository/Get");
+            _logger.LogInformation(_localizer["LogMethodCalled", "EquipmentRepository/Get"]);
 
             ApiResult<Equipment> response = new ApiResult<Equipment>();
 
@@ -124,7 +144,13 @@ namespace Medyana.BM
                 {
                     var result = await dbContext.EquipmentsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
 
-                    //// TODO mapper
+                    if (result == null)
+                    {
+                        response.ErrorMessage = _localizer["RecordNotFound", "Equipment"].Value;
+                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Get", response.ErrorMessage]);
+                        return response;
+                    }
+
                     response.Result = new Equipment()
                     {
                         Id = result.Id,
@@ -141,10 +167,11 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format("EquipmentRepository/Get - {0}", ex.InnerException.ToString()));
+                _logger.LogInformation(_localizer["LogMethodError", "EquipmentRepository/Get", ex.InnerException.ToString()]);
                 response.ErrorMessage = ex.InnerException.ToString();
             }
-            _logger.LogInformation(string.Format("EquipmentRepository/Get - IsSucceed:  {0}", response.IsSucceed));
+            _logger.LogInformation(_localizer["LogMethodSucceed", "EquipmentRepository/Get", response.IsSucceed.Deserialize()]);
+            _logger.LogInformation(_localizer["LogMethodResult", "EquipmentRepository/Get", response.Deserialize()]);
             return response;
         }
 
@@ -154,7 +181,8 @@ namespace Medyana.BM
         /// <returns>Defined All Clinis</returns>
         public async Task<ApiResult<List<Equipment>>> List()
         {
-            _logger.LogInformation("Method Called - EquipmentRepository/List");
+            _logger.LogInformation(_localizer["LogMethodCalled", "EquipmentRepository/List"]);
+
             ApiResult<List<Equipment>> response = new ApiResult<List<Equipment>>();
 
             try
@@ -163,7 +191,6 @@ namespace Medyana.BM
                 {
                     var result = await dbContext.EquipmentsDbSet.ToListAsync();
 
-                    //// TODO mapper
                     response.Result = result.Select(m => new Equipment()
                     {
                         Id = m.Id,
@@ -180,13 +207,14 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format("EquipmentRepository/List - {0}", ex.InnerException.ToString()));
+                _logger.LogInformation(_localizer["LogMethodError", "EquipmentRepository/List", ex.InnerException.ToString()]);
                 response.ErrorMessage = ex.InnerException.ToString();
             }
 
-            _logger.LogInformation(string.Format("EquipmentRepository/List - IsSucceed: {0}", response.IsSucceed));
-            return response;
+            _logger.LogInformation(_localizer["LogMethodSucceed", "EquipmentRepository/List", response.IsSucceed.Deserialize()]);
+            _logger.LogInformation(_localizer["LogMethodResult", "EquipmentRepository/List", response.Deserialize()]);
 
+            return response;
         }
 
 
@@ -197,7 +225,7 @@ namespace Medyana.BM
         /// <returns>Is Deleted</returns>
         public async Task<ApiResult<bool>> Delete(int Id)
         {
-            _logger.LogInformation("Method Called - EquipmentRepository/Delete");
+            _logger.LogInformation(_localizer["LogMethodCalled", "EquipmentRepository/Delete"]);
 
             ApiResult<bool> response = new ApiResult<bool>();
 
@@ -205,7 +233,15 @@ namespace Medyana.BM
             {
                 using (var dbContext = new MedyanaDbContext())
                 {
-                    ClinicDbObject record = new ClinicDbObject() { Id = Id };
+                    if (dbContext.EquipmentsDbSet.Any(m => m.Id == Id) == false)
+                    {
+                        response.ErrorMessage = _localizer["RecordNotFound", "Equipment" ].Value;                        
+                        _logger.LogInformation(_localizer["LogErrorMessage", "EquipmentRepository/Delete", response.ErrorMessage]);
+                        return response;
+                    }
+
+                    EquipmentDbObject record = new EquipmentDbObject() { Id = Id };
+
                     dbContext.Attach(record);
                     dbContext.Remove(record);
 
@@ -215,11 +251,12 @@ namespace Medyana.BM
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format("EquipmentRepository/Delete - {0}", ex.InnerException.ToString()));
+                _logger.LogInformation(_localizer["LogMethodError", "EquipmentRepository/Delete", ex.InnerException.ToString()]);
+
                 response.ErrorMessage = ex.InnerException.ToString();
             }
-
-            _logger.LogInformation(string.Format("EquipmentRepository/Delete - IsSucceed: {0}", response.IsSucceed));
+            _logger.LogInformation(_localizer["LogMethodSucceed", "EquipmentRepository/Delete", response.IsSucceed.Deserialize()]);
+            _logger.LogInformation(_localizer["LogMethodResult", "EquipmentRepository/Delete", response.Deserialize()]);
             return response;
         }
     }

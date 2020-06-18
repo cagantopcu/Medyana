@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\**" />
+    <Content Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Localization.AspNetCore.TagHelpers" Version="0.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
@@ -20,12 +27,10 @@
     <ProjectReference Include="..\Medyana.Contract\Medyana.Contract.csproj" />
     <ProjectReference Include="..\Medyana.Core\Medyana.Core.csproj" />
     <ProjectReference Include="..\Medyana.Model\Medyana.Model.csproj" />
+    <ProjectReference Include="..\Medyana.ResourceManager\Medyana.ResourceManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\SharedResources.en-US.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="SharedResources.tr-TR.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>

@@ -120,10 +120,22 @@
   <data name="LogClassConstructor" xml:space="preserve">
     <value>Class {0} Constructor</value>
   </data>
+  <data name="LogErrorMessage" xml:space="preserve">
+    <value>Method {0} {1}</value>
+  </data>
   <data name="LogMethodCalled" xml:space="preserve">
-    <value>Method  {0} Çağrıldı</value>
+    <value>Method {0} Çağrıldı</value>
+  </data>
+  <data name="LogMethodError" xml:space="preserve">
+    <value>Method  {0} ErrorMessage {1}</value>
   </data>
   <data name="LogMethodResult" xml:space="preserve">
     <value>Method {0} Sonucu {1}</value>
+  </data>
+  <data name="LogMethodSucceed" xml:space="preserve">
+    <value>Method  {0} Başarlı {1}</value>
+  </data>
+  <data name="RecordNotFound" xml:space="preserve">
+    <value>Kayıt Bulunamadı  {0}</value>
   </data>
 </root>

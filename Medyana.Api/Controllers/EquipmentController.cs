@@ -8,7 +8,8 @@ using Medyana.Contract;
 using Medyana.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Localization;
-using Newtonsoft.Json;
+using Medyana.ResourceManager;
+using Medyana.Core.Extensions;
 
 namespace Medyana.Api.Controllers
 {
@@ -34,7 +35,7 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Equipment/Get"]);
             ApiResult<List<Equipment>> response = await _equipmentRepository.List();
-            _logger.LogInformation(_localizer["LogMethodResult", "pi/Equipment/Get", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Get", response.Deserialize()]);
 
 
             return response;
@@ -46,7 +47,7 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Equipment/Get"]);
             ApiResult<Equipment> response = await _equipmentRepository.Get(Id);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Get", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Get", response.Deserialize()]);
             return response;
         }
 
@@ -56,17 +57,17 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Equipment/Post"]);
             ApiResult<Equipment> response = await _equipmentRepository.Add(model);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Post", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Post", response.Deserialize()]);
             return response;
         }
 
-        // PUT: api/Equipment/5
-        [HttpPut("{id}")]
+        // PUT: api/Equipment
+        [HttpPut()]
         public async Task<ApiResult<Equipment>> PutAsync(Equipment model)
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Equipment/Put"]);
             ApiResult<Equipment> response = await _equipmentRepository.Edit(model);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Put", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Put", response.Deserialize()]);
             return response;
         }
 
@@ -76,7 +77,8 @@ namespace Medyana.Api.Controllers
         {
             _logger.LogInformation(_localizer["LogMethodCalled", "api/Equipment/Delete"]);
             ApiResult<bool> response = await _equipmentRepository.Delete(id);
-            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Delete", JsonConvert.SerializeObject(response)]);
+            _logger.LogInformation(_localizer["LogMethodResult", "api/Equipment/Delete", response.Deserialize()]);
+            
             return response;
         }
     }

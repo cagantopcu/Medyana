@@ -18,11 +18,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Medyana.Contract\Medyana.Contract.csproj" />
+    <ProjectReference Include="..\Medyana.Core\Medyana.Core.csproj" />
     <ProjectReference Include="..\Medyana.Model\Medyana.Model.csproj" />
+    <ProjectReference Include="..\Medyana.ResourceManager\Medyana.ResourceManager.csproj" />
   </ItemGroup>
 
 </Project>
