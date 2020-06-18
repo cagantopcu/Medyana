@@ -1,14 +1,19 @@
 ﻿using Medyana.Api.Controllers;
 using Medyana.Contract;
 using Medyana.Model;
+using Medyana.ResourceManager;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
+
 
 namespace Medyana.Test.Controllers
 {
@@ -17,6 +22,7 @@ namespace Medyana.Test.Controllers
         EquipmentController _controller;
         IEquipmentRepositoryFake<Equipment> _repository;
         ILogger<EquipmentController> _logger;
+        IStringLocalizer<SharedResources> _localizer;
 
         private ApiResult<Equipment> ApiResultEquipmentDummyItem = new ApiResult<Equipment>();
         private ApiResult<List<Equipment>> ApiResultEquipmentDummyList = new ApiResult<List<Equipment>>();
@@ -30,12 +36,15 @@ namespace Medyana.Test.Controllers
             using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             _logger = loggerFactory.CreateLogger<EquipmentController>();
 
+            var localizationMock = new Mock<IStringLocalizer<SharedResources>>();
+            _localizer = localizationMock.Object;
+
             _repository = new EquipmentRepositoryFake();
-            //_controller = new EquipmentController(_repository, _logger);
+            _controller = new EquipmentController(_repository, _logger, _localizer);
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetList_WhenCalled_ReturnsSameResultAsync()
+        public async Task GetList_WhenCalled_ReturnsSameResultAsync()
         {
             this.ApiResultEquipmentDummyList.IsSucceed = true;
             this.EquipmentListDummyModel = new List<Equipment>() {
@@ -59,7 +68,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetList_WhenCalled_ReturnsErrorAsync()
+        public async Task GetList_WhenCalled_ReturnsErrorAsync()
         {
             this.ApiResultEquipmentDummyList.IsSucceed = false;
             this.ApiResultEquipmentDummyList.ErrorMessage = "Error Message";
@@ -73,7 +82,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Get_WhenCalled_ReturnsSameResultAsync()
+        public async Task Get_WhenCalled_ReturnsSameResultAsync()
         {
             this.ApiResultEquipmentDummyItem.IsSucceed = true;
             this.EquipmentDummyModel = new Equipment()
@@ -96,7 +105,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Get_WhenCalled_ReturnsErrorAsync()
+        public async Task Get_WhenCalled_ReturnsErrorAsync()
         {
             this.ApiResultEquipmentDummyItem.IsSucceed = false;
             this.ApiResultEquipmentDummyItem.ErrorMessage = "Error Message";
@@ -110,7 +119,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Put_WhenCalled_ReturnsUpdatedResultAsync()
+        public async Task Put_WhenCalled_ReturnsUpdatedResultAsync()
         {
             var updateModel = new Equipment()
             {
@@ -144,7 +153,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Put_WhenCalled_ReturnsErrorAsync()
+        public async Task Put_WhenCalled_ReturnsErrorAsync()
         {
             var updateModel = new Equipment() { Id = 1, Name = "Updated Equipment Name" };
 
@@ -159,7 +168,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Delete_WhenCalled_ReturnsTrueAsync()
+        public async Task Delete_WhenCalled_ReturnsTrueAsync()
         {
             ApiResultEquipmentDeleteDummyModel.Result = true;
             this.ApiResultEquipmentDeleteDummyModel.IsSucceed = true;
@@ -172,7 +181,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Delete_WhenCalled_ReturnsErrorAsync()
+        public async Task Delete_WhenCalled_ReturnsErrorAsync()
         {
             ApiResultEquipmentDeleteDummyModel.Result = false;
             this.ApiResultEquipmentDeleteDummyModel.IsSucceed = false;
@@ -187,7 +196,7 @@ namespace Medyana.Test.Controllers
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Post_WhenCalled_ReturnsSameResultAsync()
+        public async Task Post_WhenCalled_ReturnsSameResultAsync()
         {
             var addModel = new Equipment()
             {
@@ -210,6 +219,7 @@ namespace Medyana.Test.Controllers
             Assert.Equal(EquipmentDummyModel, response.Result);
             Assert.True(response.IsSucceed);
         }
+
         private void BuildDummyData()
         {
             _repository.ApiResultDummyItem = this.ApiResultEquipmentDummyItem;
@@ -219,13 +229,6 @@ namespace Medyana.Test.Controllers
             _repository.ApiResultDeleteDummyModel = this.ApiResultEquipmentDeleteDummyModel;
             _repository.DeleteDummyModel = this.EquipmentDeleteDummyModel;
 
-        }
-        private IList<ValidationResult> ValidateModel(object model)
-        {
-            var validationResults = new List<ValidationResult>();
-            var ctx = new ValidationContext(model, null, null);
-            Validator.TryValidateObject(model, ctx, validationResults, true);
-            return validationResults;
         }
     }
 }

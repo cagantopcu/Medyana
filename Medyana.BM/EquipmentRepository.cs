@@ -136,8 +136,7 @@ namespace Medyana.BM
 
             try
             {
-
-                var result = await _dbContext.EquipmentsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
+                var result = await _dbContext.EquipmentsDbSet.Where(m => m.Id == Id && m.IsDeleted == false).FirstOrDefaultAsync();
 
                 if (result == null)
                 {
@@ -181,7 +180,7 @@ namespace Medyana.BM
 
             try
             {
-                var result = await _dbContext.EquipmentsDbSet.ToListAsync();
+                var result = await _dbContext.EquipmentsDbSet.Where(m => m.IsDeleted == false).ToListAsync();
 
                 response.Result = result.Select(m => new Equipment()
                 {
@@ -229,10 +228,9 @@ namespace Medyana.BM
                     return response;
                 }
 
-                EquipmentDbObject record = new EquipmentDbObject() { Id = Id };
-
-                _dbContext.Attach(record);
-                _dbContext.Remove(record);
+                var equipmentRecord = _dbContext.EquipmentsDbSet.Where(m => m.Id == Id).FirstOrDefault();
+                equipmentRecord.IsDeleted = true;
+                _dbContext.Attach(equipmentRecord);
 
                 response.Result = await _dbContext.SaveChangesAsync() > 0;
                 response.IsSucceed = true;

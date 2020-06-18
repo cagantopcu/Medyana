@@ -120,7 +120,7 @@ namespace Medyana.BM
 
             try
             {
-                var result = await _dbContext.ClinicsDbSet.Where(m => m.Id == Id).FirstOrDefaultAsync();
+                var result = await _dbContext.ClinicsDbSet.Where(m => m.Id == Id && m.IsDeleted == false).FirstOrDefaultAsync();
 
                 if (result == null)
                 {
@@ -158,7 +158,7 @@ namespace Medyana.BM
             try
             {
 
-                var result = await _dbContext.ClinicsDbSet.ToListAsync();
+                var result = await _dbContext.ClinicsDbSet.Where(m => m.IsDeleted == false).ToListAsync();
 
                 response.Result = result.Select(m => new Clinic()
                 {
@@ -200,9 +200,14 @@ namespace Medyana.BM
                     return response;
                 }
 
-                ClinicDbObject record = new ClinicDbObject() { Id = Id };
-                _dbContext.Attach(record);
-                _dbContext.Remove(record);
+                var clinicRecord = _dbContext.ClinicsDbSet.Where(m => m.Id == Id).FirstOrDefault();
+                clinicRecord.IsDeleted = true;
+                _dbContext.Attach(clinicRecord);
+
+                //Updating Equipmens whichs are related to clinic
+                var definedEquipmentsOfClinic = _dbContext.EquipmentsDbSet.Where(m => m.ClinicId == Id).ToList();
+                definedEquipmentsOfClinic.ForEach(a => a.IsDeleted = true);
+                _dbContext.SaveChanges();
 
                 response.Result = await _dbContext.SaveChangesAsync() > 0;
                 response.IsSucceed = true;
