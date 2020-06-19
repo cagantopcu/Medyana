@@ -65,6 +65,7 @@ namespace Medyana.BM
 
                 response.Result = value;
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Add"]];
             }
             catch (Exception ex)
             {
@@ -110,6 +111,7 @@ namespace Medyana.BM
 
                 response.Result = value;
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Edit"]];
             }
             catch (Exception ex)
             {
@@ -157,6 +159,7 @@ namespace Medyana.BM
 
                 };
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Get"]];
             }
             catch (Exception ex)
             {
@@ -193,6 +196,7 @@ namespace Medyana.BM
                     UsageRate = m.UsageRate
                 }).ToList();
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["List"]];
 
             }
             catch (Exception ex)
@@ -234,6 +238,7 @@ namespace Medyana.BM
 
                 response.Result = await _dbContext.SaveChangesAsync() > 0;
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Delet"]];
             }
             catch (Exception ex)
             {

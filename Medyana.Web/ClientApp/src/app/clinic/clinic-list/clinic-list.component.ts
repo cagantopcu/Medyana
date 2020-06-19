@@ -58,6 +58,15 @@ export class ClinicListComponent implements OnInit {
 
   }
 
+  /**
+  * Delete event is clicked
+  */
+  onAddClicked = (event: any) => {
+
+
+
+  }
+
   private getClinics() {
 
     this.httpClient.get(GlobalConstants.apiURL + 'clinic').subscribe(result => {
@@ -68,7 +77,7 @@ export class ClinicListComponent implements OnInit {
         this.clinicList = apiResult.result;
       }
 
-    }, error => console.error(error));
+    }, error => notify(error));
 
   }
 
@@ -87,12 +96,13 @@ export class ClinicListComponent implements OnInit {
       if (apiResult.isSucceed) {
 
         notify(apiResult.successMessage);
+        this.getClinics();
         return;
       }
 
       notify(apiResult.errorMessage, 'error');
 
-    }, error => notify(error, 'error')
+    }, error => notify(error)
     );
 
   }

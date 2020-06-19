@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Ekleme</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Silme</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Güncelleme</value>
+  </data>
+  <data name="Get" xml:space="preserve">
+    <value>Detay</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Listeleme</value>
+  </data>
   <data name="LogClassConstructor" xml:space="preserve">
     <value>Class {0} Constructor</value>
   </data>
@@ -137,5 +152,8 @@
   </data>
   <data name="RecordNotFound" xml:space="preserve">
     <value>Kayıt Bulunamadı  {0}</value>
+  </data>
+  <data name="SucceedMessage" xml:space="preserve">
+    <value>{0} İşlemi Başarıyla tamamlandı</value>
   </data>
 </root>

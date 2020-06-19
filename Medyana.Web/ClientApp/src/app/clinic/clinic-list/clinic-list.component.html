@@ -1,11 +1,17 @@
 <p>Clinics</p>
 
+<dxi-item 
+        itemType="button" 
+        alignment="left"
+        [buttonOptions]="buttonOptions">
+    </dxi-item>
+
 <dx-data-grid id="gridContainer"
               [dataSource]="clinicList"
               [allowColumnResizing]="true"              
               [allowColumnResizing]="true"
               [showBorders]="true">
-  <dxi-column [dataField]="'id'" ></dxi-column>
+  <dxi-column [dataField]="'id'" [width]="100" ></dxi-column>
   <dxi-column [dataField]="'name'"></dxi-column>
   <dxi-column type="buttons" [width]="120" [caption]="">
     <dxi-button icon="edit" [onClick]="onEditClicked"></dxi-button>

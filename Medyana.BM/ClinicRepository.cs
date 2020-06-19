@@ -54,6 +54,7 @@ namespace Medyana.BM
                 value.Id = clinicDbObject.Id;
                 response.Result = value;
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Add"]];
             }
             catch (Exception ex)
             {
@@ -94,6 +95,7 @@ namespace Medyana.BM
 
                 response.Result = value;
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Edit"]];
             }
             catch (Exception ex)
             {
@@ -135,6 +137,7 @@ namespace Medyana.BM
                     Name = result.Name
                 };
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Get"]];
             }
             catch (Exception ex)
             {
@@ -166,7 +169,7 @@ namespace Medyana.BM
                     Name = m.Name
                 }).ToList();
                 response.IsSucceed = true;
-
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["List"]];
             }
             catch (Exception ex)
             {
@@ -211,6 +214,7 @@ namespace Medyana.BM
 
                 response.Result = await _dbContext.SaveChangesAsync() > 0;
                 response.IsSucceed = true;
+                response.SuccessMessage = _localizer["SucceedMessage", _localizer["Delete"]];
             }
             catch (Exception ex)
             {

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 
+import notify from 'devextreme/ui/notify';
+import { confirm } from 'devextreme/ui/dialog';
 import {
   DxCheckBoxModule,
   DxSelectBoxModule,
@@ -37,8 +39,6 @@ export class ClinicDetailComponent implements OnInit {
 
   ngOnInit() {
 
-    debugger;
-
     this.sub = this.route
       .queryParams
       .subscribe(params => {
@@ -53,7 +53,6 @@ export class ClinicDetailComponent implements OnInit {
   * Close the current page and returns to previous
   */
   onCloseClick = () => {
-    debugger;
     this.location.back();
   }
 
@@ -62,8 +61,6 @@ export class ClinicDetailComponent implements OnInit {
   }
 
   onSaveClick = () => {
-
-    debugger;
 
     if (this.viewType === 'edit') {
       this.updateClinic();
@@ -79,10 +76,15 @@ export class ClinicDetailComponent implements OnInit {
       const apiResult: ApiResult<ClinicModel> = result as ApiResult<ClinicModel>;
 
       if (apiResult.isSucceed) {
+
         this.clinicRecord = apiResult.result;
+        return;
+
       }
 
-    }, error => console.error(error));
+      notify(apiResult.errorMessage, 'error');
+
+    }, error => notify(error));
 
   }
 
@@ -95,13 +97,19 @@ export class ClinicDetailComponent implements OnInit {
       const apiResult: ApiResult<ClinicModel> = result as ApiResult<ClinicModel>;
 
       if (apiResult.isSucceed) {
+
         this.clinicRecord = apiResult.result;
+        notify(apiResult.successMessage);
+        return;
       }
 
-    }, error => console.error(error));
+      notify(apiResult.errorMessage, 'error');
+
+    }, error => notify(error));
 
   }
 
   private addClinic() {
+
   }
 }
