@@ -5,16 +5,30 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { ClinicListComponent } from './clinic-list/clinic-list.component';
+import { ClinicDetailComponent } from './clinic-detail/clinic-detail.component';
+
+import {
+  DxListModule,
+  DxDataGridModule,
+  DxFormModule
+} from 'devextreme-angular';
+
 
 @NgModule({
   imports: [
-    CommonModule,   
+    CommonModule,
     FormsModule,
     HttpClientModule,
+    DxDataGridModule,
+    DxFormModule,
     RouterModule.forChild([
       {
         path: 'clinic-list',
         component: ClinicListComponent
+      },
+      {
+        path: 'clinic-detail',
+        component: ClinicDetailComponent
       }
       //,
       //{
@@ -24,7 +38,8 @@ import { ClinicListComponent } from './clinic-list/clinic-list.component';
     ])
   ],
   declarations: [
-    ClinicListComponent
+    ClinicListComponent,
+    ClinicDetailComponent
   ]
 })
 export class ClinicModule {

@@ -29,11 +29,13 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\clinic\clinic.module.ts" />
+    <None Remove="ClientApp\src\app\common\apiResult.ts" />
     <None Remove="ClientApp\src\app\common\global-constants.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\clinic\clinic.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\common\apiResult.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\common\global-constants.ts" />
   </ItemGroup>
 

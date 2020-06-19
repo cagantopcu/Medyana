@@ -1,4 +1,4 @@
-interface ClinicModel {
+export class ClinicModel {
   id: number;
   name: string;
 }

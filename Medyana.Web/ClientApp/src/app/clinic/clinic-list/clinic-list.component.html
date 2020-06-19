@@ -1,1 +1,15 @@
-<p>clinic-list works!</p>
+<p>Clinics</p>
+
+<dx-data-grid id="gridContainer"
+              [dataSource]="clinicList"
+              [allowColumnResizing]="true"              
+              [allowColumnResizing]="true"
+              [showBorders]="true">
+  <dxi-column [dataField]="'id'" ></dxi-column>
+  <dxi-column [dataField]="'name'"></dxi-column>
+  <dxi-column type="buttons" [width]="120" [caption]="">
+    <dxi-button icon="edit" [onClick]="onEditClicked"></dxi-button>
+    <dxi-button icon="trash" name="customDelete" [onClick]="onDeleteClicked"></dxi-button>
+    <dxi-button icon="chevronnext" [onClick]="onViewClicked"></dxi-button>
+  </dxi-column>
+</dx-data-grid>

@@ -1,0 +1,44 @@
+<p>
+  Detail Of Selected Clinic
+</p>
+
+<dx-form
+  id="clinicDetailForm"
+  [formData]="clinicRecord"
+  [readOnly]="isDisabled()"
+>
+  <dxi-item itemType="group" [colCount]="2">
+    <!-- Id -->
+    <dxi-item dataField="id" [disabled]="true" [label]="{ text: 'Id' }">
+    </dxi-item>
+
+    <!-- Name -->
+    <dxi-item [dataField]="'name'" [label]="{ text: 'Name' }"> </dxi-item>
+
+    <!-- Back Button -->
+    <dxi-item
+      colSpan="1"
+      itemType="button"
+      alignment="left"
+      [buttonOptions]="{
+        useSubmitBehavior: false,
+        text: 'Close',
+        type: 'success',
+        onClick: onCloseClick
+      }"
+    ></dxi-item>
+
+    <!-- Submit Buttons -->
+    <dxi-item
+      colSpan="1"
+      itemType="button"
+      alignment="right"
+      [buttonOptions]="{
+        useSubmitBehavior: false,
+        text: 'Save',
+        type: 'success',
+        onClick: onSaveClick
+      }"
+    ></dxi-item>
+  </dxi-item>
+</dx-form>
