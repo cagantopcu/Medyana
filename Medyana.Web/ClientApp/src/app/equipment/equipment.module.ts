@@ -4,11 +4,10 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { ClinicListComponent } from './clinic-list/clinic-list.component';
-import { ClinicDetailComponent } from './clinic-detail/clinic-detail.component';
+import { EquipmentListComponent } from './equipment-list/equipment-list.component';
+import { EquipmentDetailComponent } from './equipment-detail/equipment-detail.component';
 
 import {
-  DxListModule,
   DxDataGridModule,
   DxFormModule
 } from 'devextreme-angular';
@@ -23,21 +22,21 @@ import {
     DxFormModule,
     RouterModule.forChild([
       {
-        path: 'clinic-list',
-        component: ClinicListComponent
+        path: 'equipment-list',
+        component: EquipmentListComponent
       },
       {
-        path: 'clinic-detail',
-        component: ClinicDetailComponent
+        path: 'equipment-detail',
+        component: EquipmentDetailComponent
       }
     ])
   ],
   declarations: [
-    ClinicListComponent,
-    ClinicDetailComponent
+    EquipmentListComponent,
+    EquipmentDetailComponent
   ]
 })
-export class ClinicModule {
+export class EquipmentModule {
   constructor() {
   }
 }

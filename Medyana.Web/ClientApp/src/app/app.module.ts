@@ -11,6 +11,9 @@ import { ClinicModule } from './clinic/clinic.module';
 import { ClinicListComponent } from './clinic/clinic-list/clinic-list.component';
 
 
+import { EquipmentModule } from './equipment/equipment.module';
+import { EquipmentListComponent  } from './equipment/equipment-list/equipment-list.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,9 +25,11 @@ import { ClinicListComponent } from './clinic/clinic-list/clinic-list.component'
     HttpClientModule,
     FormsModule,
     ClinicModule,
+    EquipmentModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'clinic-list', component: ClinicListComponent }
+      { path: 'clinic-list', component: ClinicListComponent },
+      { path: 'equipment-list', component: EquipmentListComponent }
     ])
   ],
   providers: [],

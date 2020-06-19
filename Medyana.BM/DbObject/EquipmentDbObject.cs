@@ -21,7 +21,7 @@ namespace Medyana.BM.DbObject
 
         [Required]
         [Range(1.0, Double.MaxValue)]
-        public int Quantity { get; set; }
+        public double Quantity { get; set; }
 
         [Required]
         [Range(0.01, Double.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]

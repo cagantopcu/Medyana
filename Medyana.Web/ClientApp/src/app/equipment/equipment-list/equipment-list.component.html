@@ -1,9 +1,8 @@
-<p>Clinics</p>
-
+<p>Equipment</p>
 
 <dx-data-grid
   id="gridContainer"
-  [dataSource]="clinicList"
+  [dataSource]="equipmentList"
   [allowColumnResizing]="true"
   [allowColumnResizing]="true"
   [showBorders]="true"
@@ -11,6 +10,8 @@
 >
   <dxi-column [dataField]="'id'" [width]="100"></dxi-column>
   <dxi-column [dataField]="'name'"></dxi-column>
+  <dxi-column [dataField]="'quantity'"></dxi-column>
+  <dxi-column [dataField]="'unitPrice'"></dxi-column>
   <dxi-column type="buttons" [width]="120" [caption]="">
     <dxi-button icon="edit" [onClick]="onEditClicked"></dxi-button>
     <dxi-button

@@ -13,47 +13,49 @@ import {
   DxFormComponent
 } from 'devextreme-angular';
 
-import { ClinicModel } from '../clinicModel';
+import { EquipmentModel } from '../equipmentModel';
 import { ApiResult } from '../../common/apiResult';
 import { GlobalConstants } from 'src/app/common/globalConstants';
+import { ClinicModel } from '../../clinic/clinicModel';
 
 @Component({
-  selector: 'app-clinic-detail',
-  templateUrl: './clinic-detail.component.html',
-  styleUrls: ['./clinic-detail.component.css']
+  selector: 'app-equipment-detail',
+  templateUrl: './equipment-detail.component.html',
+  styleUrls: ['./equipment-detail.component.css']
 })
-export class ClinicDetailComponent implements OnInit {
+export class EquipmentDetailComponent implements OnInit {
 
   @ViewChild(DxFormComponent, { static: false }) myform: DxFormComponent;
 
   sub: any;
   selectedRecordId: number;
   viewType: string;
-  clinicRecord: ClinicModel;
+  equipmentRecord: EquipmentModel;
+  clinicList: ClinicModel[];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private httpClient: HttpClient,
     private location: Location
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
+
+    this.fillClinics();
+
     this.sub = this.route
       .queryParams
       .subscribe(params => {
         // Defaults to 0 if no query param provided.
         this.selectedRecordId = params['id'] || 0;
         this.viewType = params['viewType'] || '';
-
+        
         if (this.viewType !== 'add') {
-          this.getClinicDetailById();
+          this.getEquipmentDetailById();
         } else {
-          this.clinicRecord = new ClinicModel();
+          this.equipmentRecord = new EquipmentModel();
         }
-
       });
   }
 
@@ -68,35 +70,30 @@ export class ClinicDetailComponent implements OnInit {
     return (this.viewType === 'view');
   }
 
-  /**
-   * Insert price of new price definition component
-   */
-  onSaveClick = (event: any) => {
+  onSaveClick = () => {
 
-    event.preventDefault();
     if (this.myform.instance.validate().isValid === false) {
       return;
     }
 
     if (this.viewType === 'edit') {
-      this.updateClinic();
-    } else if (this.viewType === 'add') {
-      this.addClinic();
+      this.updateEquipment();
+    }else if (this.viewType === 'add') {
+      this.addEquipment();
     }
-
   }
 
-  private getClinicDetailById() {
+  private getEquipmentDetailById() {
 
-    const endpoint = 'clinic/' + this.selectedRecordId;
+    const endpoint = 'equipment/' + this.selectedRecordId;
 
     this.httpClient.get(GlobalConstants.apiURL + endpoint).subscribe(result => {
 
-      const apiResult: ApiResult<ClinicModel> = result as ApiResult<ClinicModel>;
+      const apiResult: ApiResult<EquipmentModel> = result as ApiResult<EquipmentModel>;
 
       if (apiResult.isSucceed) {
 
-        this.clinicRecord = apiResult.result;
+        this.equipmentRecord = apiResult.result;
         return;
 
       }
@@ -107,17 +104,17 @@ export class ClinicDetailComponent implements OnInit {
 
   }
 
-  private updateClinic() {
+  private updateEquipment() {
 
-    const endpoint = 'clinic';
+    const endpoint = 'equipment';
 
-    this.httpClient.put(GlobalConstants.apiURL + endpoint, this.clinicRecord).subscribe(result => {
+    this.httpClient.put(GlobalConstants.apiURL + endpoint, this.equipmentRecord).subscribe(result => {
 
-      const apiResult: ApiResult<ClinicModel> = result as ApiResult<ClinicModel>;
+      const apiResult: ApiResult<EquipmentModel> = result as ApiResult<EquipmentModel>;
 
       if (apiResult.isSucceed) {
 
-        this.clinicRecord = apiResult.result;
+        this.equipmentRecord = apiResult.result;
         notify(apiResult.successMessage);
         return;
       }
@@ -128,21 +125,35 @@ export class ClinicDetailComponent implements OnInit {
 
   }
 
-  private addClinic() {
+  private fillClinics() {
 
-    const endpoint = 'clinic';
+    this.httpClient.get(GlobalConstants.apiURL + 'clinic').subscribe(result => {
 
+      const apiResult: ApiResult<ClinicModel[]> = result as ApiResult<ClinicModel[]>;
+
+      if (apiResult.isSucceed) {
+
+        this.clinicList = apiResult.result;
+      }
+
+    }, error => notify(error.message));
+
+  }
+
+  private addEquipment() {
+
+    const endpoint = 'equipment';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
 
-    this.httpClient.post(GlobalConstants.apiURL + endpoint, this.clinicRecord, {
+    this.httpClient.post(GlobalConstants.apiURL + endpoint, this.equipmentRecord, {
       headers: headers
     }).subscribe(result => {
 
-      const apiResult: ApiResult<ClinicModel> = result as ApiResult<ClinicModel>;
+      const apiResult: ApiResult<EquipmentModel> = result as ApiResult<EquipmentModel>;
 
       if (apiResult.isSucceed) {
 
-        this.clinicRecord = apiResult.result;
+        this.equipmentRecord = apiResult.result;
         notify(apiResult.successMessage);
         return;
       }
@@ -150,6 +161,6 @@ export class ClinicDetailComponent implements OnInit {
       notify(apiResult.errorMessage, 'error');
 
     }, error => notify(error.message));
-
   }
+
 }

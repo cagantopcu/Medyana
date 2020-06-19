@@ -17,13 +17,14 @@ namespace Medyana.Model
 
         [Required]
         [Range(1.0, Double.MaxValue)]
-        public int Quantity { get; set; }
+        public double Quantity { get; set; }
 
         [Required]
         [Range(0.01, Double.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]
         public decimal UnitPrice { get; set; }
 
         [Required]
+        [Range(0.00, 100, ErrorMessage = "The field {0} must be greater than {1}.")]
         public decimal UsageRate { get; set; }
 
         [Required]

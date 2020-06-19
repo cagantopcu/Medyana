@@ -1,10 +1,11 @@
 <p>
   Detail Of Selected Clinic
 </p>
-
+<form id="clinicForm" (submit)="onSaveClick($event)">
 <dx-form
   id="clinicDetailForm"
   [formData]="clinicRecord"
+  [showValidationSummary]="true"
   [readOnly]="isDisabled()"
 >
   <dxi-item itemType="group" [colCount]="2">
@@ -13,7 +14,12 @@
     </dxi-item>
 
     <!-- Name -->
-    <dxi-item [dataField]="'name'" [label]="{ text: 'Name' }"> </dxi-item>
+    <dxi-item [dataField]="'name'" [label]="{ text: 'Name' }">
+      <dxi-validation-rule
+        type="required"
+        message="Name is required"
+      ></dxi-validation-rule>
+    </dxi-item>
 
     <!-- Back Button -->
     <dxi-item
@@ -34,11 +40,11 @@
       itemType="button"
       alignment="right"
       [buttonOptions]="{
-        useSubmitBehavior: false,
+        useSubmitBehavior: true,
         text: 'Save',
-        type: 'success',
-        onClick: onSaveClick
+        type: 'success'
       }"
     ></dxi-item>
   </dxi-item>
 </dx-form>
+</form>

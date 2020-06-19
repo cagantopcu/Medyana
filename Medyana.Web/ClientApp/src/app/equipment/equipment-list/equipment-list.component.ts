@@ -7,22 +7,23 @@ import notify from 'devextreme/ui/notify';
 import { confirm } from 'devextreme/ui/dialog';
 
 import { GlobalConstants } from '../../common/globalConstants';
-import { ClinicModel } from '../clinicModel';
+import { EquipmentModel } from '../equipmentModel';
 import { ApiResult } from '../../common/apiResult';
 
 @Component({
-  selector: 'app-clinic-list',
-  templateUrl: './clinic-list.component.html',
-  styleUrls: ['./clinic-list.component.css']
+  selector: 'app-equipment-list',
+  templateUrl: './equipment-list.component.html',
+  styleUrls: ['./equipment-list.component.css']
 })
-export class ClinicListComponent implements OnInit {
+export class EquipmentListComponent implements OnInit {
 
-  clinicList: any = [];
+  equipmentList: any = [];
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
   ngOnInit() {
-    this.getClinics();
+
+    this.getEquipments();
   }
 
   /**
@@ -41,11 +42,11 @@ export class ClinicListComponent implements OnInit {
   }
 
   /**
-   * redirects to view detail of selected clinic item
-   */
+ * redirects to view detail of selected equipment item
+ */
   onViewClicked = (event: any) => {
 
-    this.navigateToStep(event, 'clinic-detail', 'view');
+    this.navigateToStep(event, 'equipment-detail', 'view');
   }
 
   /**
@@ -53,7 +54,7 @@ export class ClinicListComponent implements OnInit {
    */
   onEditClicked = (event: any) => {
 
-    this.navigateToStep(event, 'clinic-detail', 'edit');
+    this.navigateToStep(event, 'equipment-detail', 'edit');
 
   }
 
@@ -81,27 +82,13 @@ export class ClinicListComponent implements OnInit {
     this.navigateToStep(event, 'clinic-detail', 'add');
   }
 
-  private getClinics() {
-
-    this.httpClient.get(GlobalConstants.apiURL + 'clinic').subscribe(result => {
-
-      const apiResult: ApiResult<ClinicModel> = result as ApiResult<ClinicModel>;
-
-      if (apiResult.isSucceed) {
-        this.clinicList = apiResult.result;
-      }
-
-    }, error => notify(error.message));
-
-  }
-
   private deleteRecord(id: number) {
 
     if (!id) {
       return;
     }
 
-    const endpoint = 'clinic/' + id;
+    const endpoint = 'equipment/' + id;
 
     this.httpClient.delete(GlobalConstants.apiURL + endpoint).subscribe(result => {
 
@@ -110,13 +97,13 @@ export class ClinicListComponent implements OnInit {
       if (apiResult.isSucceed) {
 
         notify(apiResult.successMessage);
-        this.getClinics();
+        this.getEquipments();
         return;
       }
 
       notify(apiResult.errorMessage, 'error');
 
-    }, error => notify(error.message)
+    }, error => notify(error)
     );
 
   }
@@ -127,13 +114,28 @@ export class ClinicListComponent implements OnInit {
     if (event && event.row && event.row.data && event.row.data.id) {
       param = event.row.data.id;
     }
-    this.router.navigate(['clinic-detail'], {
+
+    this.router.navigate(['equipment-detail'], {
       queryParams:
       {
         id: param,
         viewType: viewType
       }
     });
+
+  }
+
+  private getEquipments() {
+
+    this.httpClient.get(GlobalConstants.apiURL + 'equipment').subscribe(result => {
+
+      const apiResult: ApiResult<EquipmentModel> = result as ApiResult<EquipmentModel>;
+
+      if (apiResult.isSucceed) {
+        this.equipmentList = apiResult.result;
+      }
+
+    }, error => notify(error.message));
 
   }
 
